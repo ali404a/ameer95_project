@@ -242,8 +242,9 @@ input,select{font-family:inherit;font-size:14px}
 /* ---------- Detail drawer ---------- */
 .overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(2px);z-index:50;opacity:0;pointer-events:none;transition:.25s}
 .overlay.open{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;inset-inline-start:0;height:100vh;width:520px;max-width:92vw;background:var(--bg);z-index:60;box-shadow:8px 0 40px rgba(15,23,42,.18);transform:translateX(-100%);transition:.3s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+.drawer{position:fixed;top:0;inset-inline-start:0;height:100vh;width:520px;max-width:92vw;background:var(--bg);z-index:60;box-shadow:8px 0 40px rgba(15,23,42,.18);transform:translateX(100%);transition:.3s cubic-bezier(.4,0,.2,1);overflow-y:auto}
 .drawer.open{transform:translateX(0)}
+#pubModal.open{transform: translate(50%, -50%) !important; opacity:1 !important; pointer-events:auto !important;}
 .drawer-head{padding:22px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .dh-top{display:flex;align-items:flex-start;gap:14px}
 .dh-pfp{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;flex-shrink:0;font-family:'IBM Plex Mono'}
@@ -342,6 +343,10 @@ input,select{font-family:inherit;font-size:14px}
         <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
         التقارير
       </button>
+      <button class="nav-item" data-view="mywork" id="navMyWork" style="display:none;">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        سجل النشر (عملي)
+      </button>
       <div class="nav-label">النظام</div>
       <button class="nav-item" data-view="audit">
         <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
@@ -373,6 +378,11 @@ input,select{font-family:inherit;font-size:14px}
         <div class="page-title" id="pageTitle">لوحة الإحصائيات</div>
         <div class="page-sub" id="pageSub">نظرة عامة على جميع الحسابات والنشاط</div>
       </div>
+      <select id="roleSwitcher" class="select" style="margin-inline-end: 16px; border-color: var(--accent); color: var(--accent); font-weight: 600;">
+        <option value="ali">علي المرتضى (Super Admin)</option>
+        <option value="sara">سارة أحمد (Admin)</option>
+        <option value="hasan">حسن فاضل (Admin)</option>
+      </select>
       <div class="search-box">
         <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="بحث سريع…">
@@ -439,11 +449,44 @@ input,select{font-family:inherit;font-size:14px}
         <div id="usersWrap"></div>
       </section>
 
-      <!-- ===== Placeholder views ===== -->
-      <section class="view" id="view-reports"><div class="panel"><div class="panel-body" style="text-align:center;padding:60px;color:var(--ink-3)">قسم التقارير — تصدير Excel / PDF / CSV (نموذج أولي)</div></div></section>
+      <!-- ===== MY WORK (ADMIN) ===== -->
+      <section class="view" id="view-mywork">
+        <div class="toolbar">
+          <button class="btn-primary" onclick="openPublishModal()"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>إضافة عمل جديد</button>
+        </div>
+        <div id="publishGrid" class="acc-grid"></div>
+      </section>
+
+      <!-- ===== REPORTS (SUPER ADMIN) ===== -->
+      <section class="view" id="view-reports">
+        <div class="panel" style="margin-bottom: 16px;">
+          <div class="panel-body" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+            <select class="select" id="repTime"><option value="today">اليوم</option><option value="week">هذا الأسبوع</option><option value="month">هذا الشهر</option><option value="all">شامل</option></select>
+            <select class="select" id="repAdmin"><option value="">كل المشرفين</option><option value="سارة أحمد">سارة أحمد</option><option value="حسن فاضل">حسن فاضل</option></select>
+            <button class="btn-primary" onclick="generateReport()">توليد التقرير</button>
+            <button class="select" style="margin-inline-start:auto;display:flex;gap:6px;align-items:center" onclick="toast('تم التصدير كـ PDF')"><svg fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>تصدير</button>
+          </div>
+        </div>
+        <div id="reportWrap">
+          <div class="panel"><div class="panel-body" style="text-align:center;padding:60px;color:var(--ink-3)">اضغط على زر التوليد لعرض التقرير</div></div>
+        </div>
+      </section>
       <section class="view" id="view-audit"><div class="panel"><div class="panel-body" id="auditBody"></div></div></section>
       <section class="view" id="view-archive"><div class="panel"><div class="panel-body" style="text-align:center;padding:60px;color:var(--ink-3)">الأرشيف — الحسابات المحذوفة (Soft Delete) مع إمكانية الاستعادة</div></div></section>
     </div>
+  </div>
+</div>
+
+
+<!-- Publish Modal -->
+<div class="overlay" id="pubOverlay" onclick="document.getElementById('pubOverlay').classList.remove('open');document.getElementById('pubModal').classList.remove('open')"></div>
+<div class="drawer" id="pubModal" style="width:400px; padding: 22px; right: 50%; transform: translate(50%, -150%); opacity:0; pointer-events:none; top: 50%; height: auto; max-height: 90vh; border-radius: 14px; left: auto; transition: .2s;">
+  <h3 style="margin-bottom:16px;">تسجيل عمل جديد</h3>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <select id="pubAcc" class="select"><option>اختر الحساب...</option></select>
+    <input type="text" id="pubLink" class="select" placeholder="رابط المنشور (اختياري)">
+    <textarea id="pubNotes" class="select" placeholder="الملاحظات والتفاصيل..." rows="4" style="resize:vertical"></textarea>
+    <button class="btn-primary" style="justify-content:center" onclick="savePublish()">حفظ النشر</button>
   </div>
 </div>
 
@@ -481,6 +524,13 @@ const ACCOUNTS=[
   {id:11,name:'مرماز — تيك توك 2',user:'@mirmaz_zone2',plat:'tiktok',dept:'التسويق',owner:'زينب كريم',status:'active',last:'قبل 8 ساعات',email:'mirmaz.zone2@gmail.com',pw:'Zn2!Tik99#x',phone:'+964 775 444 5566',recovery:'—',twofa:'مُفعّل',url:'tiktok.com/@mirmaz_zone2',opens:167,createdBy:'زينب كريم',pwChanged:'قبل 6 أيام'},
   {id:12,name:'مرماز — إنستا الدعم',user:'@mirmaz_support',plat:'instagram',dept:'الدعم',owner:'حسن فاضل',status:'active',last:'قبل ساعة',email:'mirmaz.sup@gmail.com',pw:'Sp@Ig2024!k',phone:'+964 772 555 6677',recovery:'mirmaz.sup.rec@gmail.com',twofa:'مُفعّل',url:'instagram.com/mirmaz_support',opens:203,createdBy:'حسن فاضل',pwChanged:'قبل 3 أيام'}
 ];
+
+
+let PUBLISH_LOGS=[
+  {id:1, admin:'سارة أحمد', acc:'مرماز أكاديمي', link:'instagram.com/p/123', notes:'نشر بوست العرض الجديد', t:'قبل ساعتين'},
+  {id:2, admin:'حسن فاضل', acc:'مرماز زون', link:'tiktok.com/v/456', notes:'فيديو الكواليس', t:'قبل يوم'}
+];
+let CURRENT_USER = {id:'super', role:'Super Admin', name:'علي المرتضى'};
 
 const USERS=[
   {name:'علي المرتضى',email:'ali@404studio.iq',role:'Super Admin',roleClass:'role-super',dept:'الإدارة',accounts:5,last:'الآن',status:'active'},
@@ -547,6 +597,7 @@ function filtered(){
   const q=document.getElementById('accSearch').value.toLowerCase();
   const st=document.getElementById('fStatus').value;const dp=document.getElementById('fDept').value;
   return ACCOUNTS.filter(a=>{
+    if(CURRENT_USER.role !== 'Super Admin' && a.owner !== CURRENT_USER.name) return false;
     if(activePlat&&a.plat!==activePlat)return false;
     if(st&&a.status!==st)return false;
     if(dp&&a.dept!==dp)return false;
@@ -699,7 +750,7 @@ document.getElementById('auditBody').innerHTML=`<table class="users-table"><thea
   auditLogs.map(l=>`<tr><td class="td-name">${l.u}</td><td>${l.act}</td><td>${l.tgt}</td><td class="mono">${l.ip}</td><td class="mono" style="color:var(--ink-3)">${l.t}</td></tr>`).join('')+`</tbody></table>`;
 
 /* ============ NAV ============ */
-const titles={dashboard:['لوحة الإحصائيات','نظرة عامة على جميع الحسابات والنشاط'],accounts:['الحسابات','إدارة جميع حسابات التواصل الاجتماعي'],users:['المستخدمون','إدارة المستخدمين والصلاحيات (RBAC)'],reports:['التقارير','تصدير Excel / PDF / CSV'],audit:['سجل التدقيق','كل عملية مسجّلة بالمستخدم والوقت'],archive:['الأرشيف','الحسابات المحذوفة (Soft Delete)']};
+const titles={dashboard:['لوحة الإحصائيات','نظرة عامة على جميع الحسابات والنشاط'],accounts:['الحسابات','إدارة جميع حسابات التواصل الاجتماعي'],users:['المستخدمون','إدارة المستخدمين والصلاحيات (RBAC)'],reports:['التقارير','تصدير Excel / PDF / CSV'],audit:['سجل التدقيق','كل عملية مسجّلة بالمستخدم والوقت'],archive:['الأرشيف','الحسابات المحذوفة (Soft Delete)'], mywork:['سجل النشر','أعمالي والمقاطع التي قمت بنشرها']};
 document.querySelectorAll('.nav-item').forEach(n=>n.onclick=()=>{
   document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));n.classList.add('active');
   const v=n.dataset.view;
@@ -716,6 +767,101 @@ let toastT;
 function toast(m){clearTimeout(toastT);document.getElementById('toastMsg').textContent=m;const t=document.getElementById('toast');t.classList.add('show');toastT=setTimeout(()=>t.classList.remove('show'),2600)}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
 renderAccounts();
+
+document.getElementById('roleSwitcher').onchange = (e) => {
+  const val = e.target.value;
+  if(val === 'ali') CURRENT_USER = {id:'super', role:'Super Admin', name:'علي المرتضى'};
+  else if(val === 'sara') CURRENT_USER = {id:'sara', role:'Admin', name:'سارة أحمد'};
+  else if(val === 'hasan') CURRENT_USER = {id:'hasan', role:'Admin', name:'حسن فاضل'};
+  
+  // Update UI
+  document.querySelector('.user-name').textContent = CURRENT_USER.name;
+  document.querySelector('.user-role').textContent = CURRENT_USER.role;
+  document.querySelector('.avatar').textContent = CURRENT_USER.name[0];
+  
+  // Toggle Nav Items
+  if(CURRENT_USER.role === 'Super Admin'){
+    document.querySelector('[data-view="users"]').style.display = 'flex';
+    document.querySelector('[data-view="reports"]').style.display = 'flex';
+    document.querySelector('[data-view="audit"]').style.display = 'flex';
+    document.getElementById('navMyWork').style.display = 'none';
+  } else {
+    document.querySelector('[data-view="users"]').style.display = 'none';
+    document.querySelector('[data-view="reports"]').style.display = 'none';
+    document.querySelector('[data-view="audit"]').style.display = 'none';
+    document.getElementById('navMyWork').style.display = 'flex';
+  }
+  
+  // Default to dashboard
+  document.querySelector('[data-view="dashboard"]').click();
+  
+  renderAccounts();
+  updateDashboardStats();
+};
+
+function updateDashboardStats() {
+  const data = ACCOUNTS.filter(a => CURRENT_USER.role === 'Super Admin' || a.owner === CURRENT_USER.name);
+  const total = data.length;
+  const active = data.filter(a => a.status === 'active').length;
+  document.getElementById('statGrid').innerHTML = statData.map((s,i) => {
+    let v = s.val;
+    if(i===0) v = total;
+    if(i===1) v = active;
+    if(CURRENT_USER.role !== 'Super Admin' && i>1) v = Math.floor(v/3);
+    return `<div class="stat"><div class="stat-top"><div class="stat-icn" style="background:${s.bg};color:${s.c}"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">${s.icon}</svg></div><span class="stat-trend ${s.up?'up':'down'}"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="${s.up?'m18 15-6-6-6 6':'m6 9 6 6 6-6'}"/></svg>${s.trend}</span></div><div class="stat-val">${v}</div><div class="stat-lbl">${s.lbl}</div></div>`
+  }).join('');
+}
+
+function renderPublishLogs() {
+  const grid = document.getElementById('publishGrid');
+  const logs = PUBLISH_LOGS.filter(l => CURRENT_USER.role === 'Super Admin' || l.admin === CURRENT_USER.name);
+  grid.innerHTML = logs.map(l => `
+    <div class="acc-card" style="padding:16px;">
+      <div style="font-size:12px;color:var(--ink-3);margin-bottom:8px;">${l.t} &middot; <b>${l.acc}</b></div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px;">${l.notes}</div>
+      ${l.link ? `<a href="https://${l.link}" target="_blank" style="color:var(--accent);font-size:12px;text-decoration:none;">${l.link}</a>` : ''}
+    </div>
+  `).join('') || emptyState();
+}
+
+function openPublishModal() {
+  const sel = document.getElementById('pubAcc');
+  const myAccs = ACCOUNTS.filter(a => CURRENT_USER.role === 'Super Admin' || a.owner === CURRENT_USER.name);
+  sel.innerHTML = '<option value="">اختر الحساب...</option>' + myAccs.map(a => `<option>${a.name}</option>`).join('');
+  document.getElementById('pubOverlay').classList.add('open');
+  document.getElementById('pubModal').classList.add('open');
+}
+
+function savePublish() {
+  const acc = document.getElementById('pubAcc').value;
+  const link = document.getElementById('pubLink').value;
+  const notes = document.getElementById('pubNotes').value;
+  if(!acc || !notes) return toast('يرجى اختيار الحساب وكتابة ملاحظات');
+  PUBLISH_LOGS.unshift({id: Date.now(), admin: CURRENT_USER.name, acc, link, notes, t: 'الآن'});
+  document.getElementById('pubOverlay').click();
+  toast('تم حفظ العمل بنجاح!');
+  renderPublishLogs();
+}
+
+function generateReport() {
+  const admin = document.getElementById('repAdmin').value;
+  let logs = PUBLISH_LOGS;
+  if(admin) logs = logs.filter(l => l.admin === admin);
+  
+  const html = `<table class="users-table" style="margin-top:16px;"><thead><tr><th>المشرف</th><th>الحساب</th><th>المنشور</th><th>التفاصيل</th><th>الوقت</th></tr></thead><tbody>` + 
+    logs.map(l => `<tr><td class="td-name">${l.admin}</td><td><b>${l.acc}</b></td><td class="mono" style="color:var(--accent)">${l.link||'—'}</td><td>${l.notes}</td><td style="color:var(--ink-3)">${l.t}</td></tr>`).join('') + `</tbody></table>`;
+  
+  document.getElementById('reportWrap').innerHTML = logs.length ? html : `<div class="panel"><div class="panel-body" style="text-align:center;padding:60px;color:var(--ink-3)">لا توجد بيانات لهذه الفترة</div></div>`;
+}
+
+// Hook into nav click
+const oldNavClick = document.querySelectorAll('.nav-item');
+oldNavClick.forEach(n => {
+  n.addEventListener('click', () => {
+    if(n.dataset.view === 'mywork') renderPublishLogs();
+  });
+});
+
 </script>
 </body>
 </html>
