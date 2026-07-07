@@ -48,6 +48,48 @@ input,select{font-family:inherit;font-size:14px}
 ::-webkit-scrollbar-thumb{background:#D5DBE3;border-radius:20px;border:3px solid var(--bg)}
 ::-webkit-scrollbar-track{background:transparent}
 
+
+/* ---------- Mobile App UI ---------- */
+.bottom-nav { display: none; }
+.mobile-header-title { display: none; }
+.mobile-profile { display: none; }
+
+@media(max-width:820px){
+  .sidebar { display: none !important; }
+  .bottom-nav {
+    display: flex; position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line); z-index: 100;
+    justify-content: space-around; align-items: center; padding: 0 12px;
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -4px 24px rgba(15,23,42,0.06);
+  }
+  .bn-item {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    color: var(--ink-3); font-size: 10.5px; font-weight: 600; padding: 6px 12px;
+    transition: .15s; border-radius: 12px;
+  }
+  .bn-item svg { width: 22px; height: 22px; stroke: currentColor; transition: .2s; }
+  .bn-item.active { color: var(--accent); }
+  .bn-item.active svg { stroke-width: 2.5; transform: translateY(-2px); }
+  
+  .main { padding-bottom: 90px; }
+  
+  /* Header Adjustments */
+  .topbar { padding: 0 16px; position: sticky; top: 0; justify-content: space-between; }
+  .menu-btn, .search-box, .icon-btn, .page-title, .page-sub { display: none !important; }
+  
+  .mobile-header-title {
+    display: block !important; font-size: 17px; font-weight: 700;
+    position: absolute; left: 50%; transform: translateX(-50%); letter-spacing: -0.3px;
+  }
+  .mobile-profile { display: grid !important; cursor: pointer; }
+  
+  /* Tweaks for mobile grid */
+  .d-field { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .d-field-k { width: auto; }
+}
+
 /* ---------- Layout ---------- */
 .app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
 
@@ -371,6 +413,9 @@ input,select{font-family:inherit;font-size:14px}
   <!-- Main -->
   <div class="main">
     <header class="topbar">
+      <!-- Mobile Elements -->
+      <div class="mobile-profile avatar" id="mobAvatar" onclick="toast('مرحباً ' + CURRENT_USER.name)">ع</div>
+      <div class="mobile-header-title">مركز العمليات</div>
       <button class="icon-btn menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">
         <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
@@ -947,15 +992,7 @@ function deleteUser(email) {
 
 /* ============ NAV ============ */
 const titles={dashboard:['لوحة الإحصائيات','نظرة عامة على جميع الحسابات والنشاط'],accounts:['الحسابات','إدارة جميع حسابات التواصل الاجتماعي'],users:['المستخدمون','إدارة المستخدمين والصلاحيات (RBAC)'],reports:['التقارير','تصدير Excel / PDF / CSV'],audit:['سجل التدقيق','كل عملية مسجّلة بالمستخدم والوقت'],archive:['الأرشيف','الحسابات المحذوفة (Soft Delete)'], mywork:['سجل النشر','أعمالي والمقاطع التي قمت بنشرها']};
-document.querySelectorAll('.nav-item').forEach(n=>n.onclick=()=>{
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));n.classList.add('active');
-  const v=n.dataset.view;
-  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-  document.getElementById('view-'+v).classList.add('active');
-  document.getElementById('pageTitle').textContent=titles[v][0];
-  document.getElementById('pageSub').textContent=titles[v][1];
-  document.getElementById('sidebar').classList.remove('open');
-});
+
 
 /* ============ UTIL ============ */
 function copy(t,m){navigator.clipboard?.writeText(t);toast(m)}
@@ -973,7 +1010,7 @@ document.getElementById('roleSwitcher').onchange = (e) => {
   // Update UI
   document.querySelector('.user-name').textContent = CURRENT_USER.name;
   document.querySelector('.user-role').textContent = CURRENT_USER.role;
-  document.querySelector('.avatar').textContent = CURRENT_USER.name[0];
+  document.querySelectorAll('.avatar').forEach(el => el.textContent = CURRENT_USER.name[0]);
   
   // Toggle Nav Items
   if(CURRENT_USER.role === 'Super Admin'){
@@ -982,12 +1019,18 @@ document.getElementById('roleSwitcher').onchange = (e) => {
     document.querySelector('[data-view="audit"]').style.display = 'flex';
     document.getElementById('navMyWork').style.display = 'none';
     document.getElementById('btnAddAcc').style.display = 'flex';
+    document.getElementById('bnUsers').style.display = 'flex';
+    document.getElementById('bnReports').style.display = 'flex';
+    document.getElementById('bnMyWork').style.display = 'none';
   } else {
     document.querySelector('[data-view="users"]').style.display = 'none';
     document.querySelector('[data-view="reports"]').style.display = 'none';
     document.querySelector('[data-view="audit"]').style.display = 'none';
     document.getElementById('navMyWork').style.display = 'flex';
     document.getElementById('btnAddAcc').style.display = 'none';
+    document.getElementById('bnUsers').style.display = 'none';
+    document.getElementById('bnReports').style.display = 'none';
+    document.getElementById('bnMyWork').style.display = 'flex';
   }
   
   // Default to dashboard
@@ -1053,10 +1096,26 @@ function generateReport() {
 }
 
 // Hook into nav click
-const oldNavClick = document.querySelectorAll('.nav-item');
-oldNavClick.forEach(n => {
+const allNavs = document.querySelectorAll('.nav-item, .bn-item');
+allNavs.forEach(n => {
   n.addEventListener('click', () => {
-    if(n.dataset.view === 'mywork') renderPublishLogs();
+    // Update active class on both sidebar and bottom nav
+    document.querySelectorAll('.nav-item, .bn-item').forEach(x => x.classList.remove('active'));
+    
+    const v = n.dataset.view;
+    document.querySelectorAll(`[data-view="${v}"]`).forEach(el => el.classList.add('active'));
+    
+    document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+    document.getElementById('view-'+v).classList.add('active');
+    
+    // Fallback for titles if not defined
+    if(titles[v]){
+      document.getElementById('pageTitle').textContent=titles[v][0];
+      document.getElementById('pageSub').textContent=titles[v][1];
+    }
+    document.getElementById('sidebar').classList.remove('open');
+    
+    if(v === 'mywork') renderPublishLogs();
   });
 });
 
