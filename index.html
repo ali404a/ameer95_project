@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Control Center — 404 Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F8FA;
+  --surface:#FFFFFF;
+  --surface-2:#FBFCFE;
+  --ink:#0F172A;
+  --ink-2:#475569;
+  --ink-3:#94A3B8;
+  --line:#E7EBF0;
+  --line-2:#EEF1F5;
+  --accent:#0E4AE4;
+  --accent-soft:#EAF0FE;
+  --teal:#0EA5A5;
+  --green:#12A150;
+  --green-soft:#E7F6EE;
+  --amber:#C77700;
+  --amber-soft:#FDF3E3;
+  --red:#DC2626;
+  --red-soft:#FCECEC;
+  --violet:#7C3AED;
+  --shadow:0 1px 2px rgba(15,23,42,.04), 0 4px 16px rgba(15,23,42,.05);
+  --shadow-lg:0 8px 40px rgba(15,23,42,.12);
+  --r:14px;
+  --r-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:'IBM Plex Mono',monospace;direction:ltr;unicode-bidi:embed}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;font-size:14px}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#D5DBE3;border-radius:20px;border:3px solid var(--bg)}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- Layout ---------- */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+
+/* Sidebar */
+.sidebar{
+  background:var(--surface);
+  border-inline-start:1px solid var(--line);
+  padding:20px 14px;
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 20px}
+.brand-logo{
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(135deg,#0E4AE4,#0A2E9E);
+  display:grid;place-items:center;color:#fff;font-weight:700;
+  font-family:'IBM Plex Mono';font-size:13px;letter-spacing:-.5px;
+  box-shadow:0 4px 12px rgba(14,74,228,.28);
+}
+.brand-name{font-weight:700;font-size:15px;letter-spacing:-.2px}
+.brand-sub{font-size:11px;color:var(--ink-3);font-weight:500}
+.nav-label{font-size:10.5px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.7px;padding:16px 10px 6px}
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:9px 11px;border-radius:var(--r-sm);
+  color:var(--ink-2);font-weight:500;font-size:13.5px;
+  transition:.12s;width:100%;text-align:start;position:relative;
+}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;stroke:currentColor}
+.nav-item:hover{background:var(--surface-2);color:var(--ink)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav-item.active::before{content:"";position:absolute;inset-inline-start:-14px;top:8px;bottom:8px;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.nav-badge{margin-inline-start:auto;background:var(--red-soft);color:var(--red);font-size:11px;font-weight:600;padding:1px 7px;border-radius:20px;font-family:'IBM Plex Mono'}
+.sidebar-foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--line)}
+.user-chip{display:flex;align-items:center;gap:10px;padding:8px;border-radius:var(--r-sm);transition:.12s}
+.user-chip:hover{background:var(--surface-2)}
+.avatar{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#0EA5A5,#0E7490);color:#fff;display:grid;place-items:center;font-weight:600;font-size:13px}
+.user-name{font-size:13px;font-weight:600;line-height:1.2}
+.user-role{font-size:11px;color:var(--ink-3)}
+
+/* Main */
+.main{display:flex;flex-direction:column;min-width:0}
+.topbar{
+  height:64px;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:16px;padding:0 26px;
+  position:sticky;top:0;z-index:20;
+}
+.page-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.page-sub{font-size:12.5px;color:var(--ink-3)}
+.search-box{
+  margin-inline-start:auto;display:flex;align-items:center;gap:8px;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:10px;padding:8px 13px;width:260px;transition:.15s;
+}
+.search-box:focus-within{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
+.search-box svg{width:16px;height:16px;stroke:var(--ink-3);flex-shrink:0}
+.search-box input{border:none;background:none;outline:none;width:100%;color:var(--ink)}
+.icon-btn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:var(--ink-2);position:relative;transition:.12s}
+.icon-btn:hover{background:var(--surface-2);color:var(--ink)}
+.icon-btn svg{width:19px;height:19px;stroke:currentColor}
+.dot{position:absolute;top:8px;inset-inline-end:9px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid #fff}
+.content{padding:26px;max-width:1500px;width:100%;margin:0 auto}
+.view{display:none;animation:fade .3s}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- Stat cards ---------- */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:.15s}
+.stat:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.stat-icn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center}
+.stat-icn svg{width:19px;height:19px;stroke-width:2}
+.stat-trend{font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:3px;font-family:'IBM Plex Mono'}
+.stat-trend svg{width:13px;height:13px}
+.up{color:var(--green)}.down{color:var(--red)}
+.stat-val{font-size:30px;font-weight:700;letter-spacing:-1px;font-family:'IBM Plex Mono';line-height:1}
+.stat-lbl{font-size:12.5px;color:var(--ink-2);margin-top:6px;font-weight:500}
+
+/* Platform mini stats */
+.plat-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:22px}
+.plat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;display:flex;align-items:center;gap:11px;box-shadow:var(--shadow);transition:.12s}
+.plat:hover{border-color:#D5DBE3}
+.plat-icn{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+.plat-icn svg{width:18px;height:18px}
+.plat-n{font-size:19px;font-weight:700;font-family:'IBM Plex Mono';line-height:1}
+.plat-l{font-size:11px;color:var(--ink-3);font-weight:500}
+
+/* Panels */
+.grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line-2)}
+.panel-title{font-size:14.5px;font-weight:700}
+.panel-act{font-size:12.5px;color:var(--accent);font-weight:600}
+.panel-body{padding:18px}
+
+/* Bar chart */
+.bars{display:flex;align-items:flex-end;gap:14px;height:190px;padding-top:10px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:44px;border-radius:7px 7px 0 0;background:linear-gradient(180deg,#0E4AE4,#3B6BF0);transition:.5s cubic-bezier(.4,0,.2,1);position:relative;min-height:4px}
+.bar:hover{filter:brightness(1.08)}
+.bar-v{position:absolute;top:-20px;inset-inline-start:50%;transform:translateX(50%);font-size:11px;font-weight:600;font-family:'IBM Plex Mono';color:var(--ink-2)}
+.bar-l{font-size:11.5px;color:var(--ink-3);font-weight:500}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:22px}
+.donut{width:150px;height:150px;flex-shrink:0;position:relative}
+.donut-center{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.donut-total{font-size:26px;font-weight:700;font-family:'IBM Plex Mono';line-height:1}
+.donut-lbl{font-size:11px;color:var(--ink-3)}
+.legend{display:flex;flex-direction:column;gap:9px;flex:1}
+.legend-item{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.legend-name{color:var(--ink-2);font-weight:500}
+.legend-val{margin-inline-start:auto;font-weight:600;font-family:'IBM Plex Mono';font-size:12px}
+
+/* Activity feed */
+.feed-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.feed-item:last-child{border:none;padding-bottom:0}
+.feed-dot{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+.feed-dot svg{width:15px;height:15px}
+.feed-txt{font-size:13px;line-height:1.45}
+.feed-txt b{font-weight:600}
+.feed-time{font-size:11px;color:var(--ink-3);margin-top:1px;font-family:'IBM Plex Mono';direction:ltr;text-align:start}
+
+/* ---------- Accounts view ---------- */
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.big-search{flex:1;min-width:220px;display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;box-shadow:var(--shadow)}
+.big-search svg{width:17px;height:17px;stroke:var(--ink-3)}
+.big-search input{border:none;background:none;outline:none;width:100%}
+.select{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--ink-2);font-weight:500;box-shadow:var(--shadow);outline:none;cursor:pointer}
+.select:focus{border-color:var(--accent)}
+.view-toggle{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;box-shadow:var(--shadow)}
+.vt-btn{padding:7px 12px;border-radius:7px;color:var(--ink-3);display:grid;place-items:center;transition:.12s}
+.vt-btn svg{width:17px;height:17px;stroke:currentColor}
+.vt-btn.active{background:var(--accent-soft);color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;display:flex;align-items:center;gap:7px;box-shadow:0 4px 12px rgba(14,74,228,.25);transition:.12s}
+.btn-primary:hover{background:#0A3BC7;transform:translateY(-1px)}
+.btn-primary svg{width:17px;height:17px}
+
+.filter-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{padding:6px 13px;border-radius:20px;font-size:12.5px;font-weight:500;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);transition:.12s}
+.chip:hover{border-color:#C7D0DC}
+.chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip .c{opacity:.6;font-family:'IBM Plex Mono';margin-inline-start:5px}
+
+/* Cards grid */
+.acc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.acc-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;transition:.15s;cursor:pointer}
+.acc-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:#D5DBE3}
+.acc-head{padding:16px;display:flex;gap:12px;align-items:flex-start}
+.acc-pfp{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:16px;flex-shrink:0;font-family:'IBM Plex Mono'}
+.acc-meta{min-width:0;flex:1}
+.acc-name{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-user{font-size:12.5px;color:var(--ink-3);font-family:'IBM Plex Mono';direction:ltr;text-align:start}
+.acc-plat-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;margin-top:6px}
+.acc-plat-badge svg{width:12px;height:12px}
+.status-pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:5px;flex-shrink:0}
+.status-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.s-active{background:var(--green-soft);color:var(--green)}
+.s-stopped{background:var(--line-2);color:var(--ink-3)}
+.s-blocked{background:var(--red-soft);color:var(--red)}
+.s-pending{background:var(--amber-soft);color:var(--amber)}
+.s-maint{background:#EEF0FE;color:var(--violet)}
+.acc-info{padding:0 16px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;font-size:12px}
+.acc-info-item{display:flex;flex-direction:column;gap:1px}
+.acc-info-k{color:var(--ink-3);font-size:11px}
+.acc-info-v{color:var(--ink);font-weight:600}
+.acc-foot{display:flex;align-items:center;gap:4px;padding:11px 14px;border-top:1px solid var(--line-2);background:var(--surface-2)}
+.acc-btn{flex:1;padding:8px;border-radius:8px;display:grid;place-items:center;color:var(--ink-2);transition:.12s;position:relative}
+.acc-btn svg{width:16px;height:16px;stroke:currentColor}
+.acc-btn:hover{background:#fff;color:var(--accent);box-shadow:var(--shadow)}
+.acc-open{background:var(--accent);color:#fff!important;flex:2;font-weight:600;font-size:12.5px;gap:6px;display:flex;align-items:center;justify-content:center}
+.acc-open:hover{background:#0A3BC7}
+
+/* Table view */
+.acc-table{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border-collapse:collapse}
+.acc-table thead th{text-align:start;font-size:11.5px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.4px;padding:13px 16px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.acc-table tbody td{padding:12px 16px;border-bottom:1px solid var(--line-2);font-size:13px}
+.acc-table tbody tr{transition:.1s;cursor:pointer}
+.acc-table tbody tr:hover{background:var(--surface-2)}
+.acc-table tbody tr:last-child td{border-bottom:none}
+.td-acc{display:flex;align-items:center;gap:11px}
+.td-pfp{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px;flex-shrink:0;font-family:'IBM Plex Mono'}
+.td-name{font-weight:600;font-size:13.5px}
+.td-user{font-size:11.5px;color:var(--ink-3);font-family:'IBM Plex Mono';direction:ltr}
+.row-actions{display:flex;gap:2px}
+.row-actions .acc-btn{flex:none;width:32px;height:32px}
+.hidden{display:none!important}
+
+/* ---------- Detail drawer ---------- */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(2px);z-index:50;opacity:0;pointer-events:none;transition:.25s}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;inset-inline-start:0;height:100vh;width:520px;max-width:92vw;background:var(--bg);z-index:60;box-shadow:8px 0 40px rgba(15,23,42,.18);transform:translateX(-100%);transition:.3s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+.drawer.open{transform:translateX(0)}
+.drawer-head{padding:22px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.dh-top{display:flex;align-items:flex-start;gap:14px}
+.dh-pfp{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;flex-shrink:0;font-family:'IBM Plex Mono'}
+.dh-name{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.dh-user{font-size:13px;color:var(--ink-3);font-family:'IBM Plex Mono';direction:ltr;text-align:start}
+.dh-close{margin-inline-start:auto;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:var(--ink-2);background:var(--surface-2)}
+.dh-close:hover{background:var(--red-soft);color:var(--red)}
+.dh-close svg{width:18px;height:18px}
+.dh-tabs{display:flex;gap:4px;margin-top:18px}
+.dh-tab{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink-3);transition:.12s}
+.dh-tab.active{background:var(--accent-soft);color:var(--accent)}
+.dh-tab:hover:not(.active){background:var(--surface-2);color:var(--ink-2)}
+.drawer-body{padding:22px}
+.d-section{margin-bottom:22px}
+.d-section-title{font-size:11.5px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.d-section-title svg{width:15px;height:15px;stroke:var(--ink-3)}
+.d-field{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:9px;display:flex;align-items:center;gap:12px}
+.d-field-k{font-size:12px;color:var(--ink-3);width:110px;flex-shrink:0;font-weight:500}
+.d-field-v{font-weight:600;font-size:13.5px;flex:1;min-width:0;word-break:break-word}
+.d-field-v.mono{font-size:13px;font-weight:500}
+.copy-btn{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--ink-3);background:var(--surface-2);flex-shrink:0;transition:.12s}
+.copy-btn:hover{background:var(--accent-soft);color:var(--accent)}
+.copy-btn svg{width:15px;height:15px}
+.pw-field{letter-spacing:2px}
+.eye-btn{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--ink-3);background:var(--surface-2);flex-shrink:0}
+.eye-btn:hover{color:var(--accent)}
+.eye-btn svg{width:15px;height:15px}
+.secure-note{background:var(--amber-soft);border:1px solid #F5D9A8;border-radius:var(--r-sm);padding:11px 13px;font-size:12px;color:var(--amber);display:flex;gap:9px;align-items:flex-start;margin-bottom:16px}
+.secure-note svg{width:16px;height:16px;flex-shrink:0;margin-top:1px}
+.log-entry{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.log-entry:last-child{border:none}
+.log-icn{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex-shrink:0}
+.log-icn svg{width:14px;height:14px}
+.log-txt{font-size:13px}
+.log-txt b{font-weight:600}
+.log-time{font-size:11px;color:var(--ink-3);font-family:'IBM Plex Mono';direction:ltr;text-align:start;margin-top:1px}
+
+/* Users view */
+.users-table{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border-collapse:collapse}
+.users-table thead th{text-align:start;font-size:11.5px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.4px;padding:13px 18px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.users-table tbody td{padding:13px 18px;border-bottom:1px solid var(--line-2);font-size:13.5px}
+.users-table tbody tr:last-child td{border-bottom:none}
+.users-table tbody tr:hover{background:var(--surface-2)}
+.role-badge{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:7px}
+.role-super{background:#F3E8FF;color:var(--violet)}
+.role-admin{background:var(--accent-soft);color:var(--accent)}
+.role-mgr{background:#E0F2F1;color:var(--teal)}
+.role-mkt{background:var(--amber-soft);color:var(--amber)}
+.role-view{background:var(--line-2);color:var(--ink-3)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;inset-inline-start:50%;transform:translateX(50%) translateY(100px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:11px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow-lg);z-index:200;display:flex;align-items:center;gap:9px;opacity:0;transition:.3s}
+.toast.show{transform:translateX(50%) translateY(0);opacity:1}
+.toast svg{width:17px;height:17px;color:#4ADE80}
+
+@media(max-width:1100px){.stat-grid{grid-template-columns:repeat(2,1fr)}.plat-row{grid-template-columns:repeat(3,1fr)}.grid-2{grid-template-columns:1fr}}
+@media(max-width:820px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;z-index:100;transform:translateX(100%);transition:.3s;width:248px}
+  .sidebar.open{transform:translateX(0)}
+  .stat-grid{grid-template-columns:1fr}.plat-row{grid-template-columns:repeat(2,1fr)}
+  .menu-btn{display:grid!important}
+}
+.menu-btn{display:none}
+*:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">404</div>
+      <div>
+        <div class="brand-name">Social Control</div>
+        <div class="brand-sub">404 Studio · مركز العمليات</div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-label">القائمة</div>
+      <button class="nav-item active" data-view="dashboard">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        لوحة الإحصائيات
+      </button>
+      <button class="nav-item" data-view="accounts">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
+        الحسابات
+        <span class="nav-badge">112</span>
+      </button>
+      <button class="nav-item" data-view="users">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        المستخدمون
+      </button>
+      <button class="nav-item" data-view="reports">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        التقارير
+      </button>
+      <div class="nav-label">النظام</div>
+      <button class="nav-item" data-view="audit">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        سجل التدقيق
+      </button>
+      <button class="nav-item" data-view="archive">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="5" rx="1"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9M10 13h4"/></svg>
+        الأرشيف
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar">ع</div>
+        <div>
+          <div class="user-name">علي المرتضى</div>
+          <div class="user-role">Super Admin</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <div>
+        <div class="page-title" id="pageTitle">لوحة الإحصائيات</div>
+        <div class="page-sub" id="pageSub">نظرة عامة على جميع الحسابات والنشاط</div>
+      </div>
+      <div class="search-box">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="بحث سريع…">
+      </div>
+      <button class="icon-btn"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="dot"></span></button>
+      <button class="icon-btn"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    </header>
+
+    <div class="content">
+      <!-- ===== DASHBOARD ===== -->
+      <section class="view active" id="view-dashboard">
+        <div class="stat-grid" id="statGrid"></div>
+        <div class="plat-row" id="platRow"></div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">عدد الحسابات لكل قسم</span><span class="panel-act">آخر 30 يوم</span></div>
+            <div class="panel-body"><div class="bars" id="bars"></div></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">توزيع الحسابات حسب المنصة</span></div>
+            <div class="panel-body">
+              <div class="donut-wrap">
+                <div class="donut">
+                  <svg viewBox="0 0 42 42" width="150" height="150" id="donut"></svg>
+                  <div class="donut-center"><div class="donut-total">112</div><div class="donut-lbl">إجمالي الحسابات</div></div>
+                </div>
+                <div class="legend" id="legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">آخر النشاطات</span><span class="panel-act">عرض السجل الكامل</span></div>
+          <div class="panel-body" id="feed"></div>
+        </div>
+      </section>
+
+      <!-- ===== ACCOUNTS ===== -->
+      <section class="view" id="view-accounts">
+        <div class="toolbar">
+          <div class="big-search">
+            <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="accSearch" placeholder="ابحث بالاسم، اليوزر، البريد، الملاحظات…">
+          </div>
+          <select class="select" id="fStatus"><option value="">كل الحالات</option><option value="active">نشط</option><option value="stopped">متوقف</option><option value="blocked">محظور</option><option value="pending">بانتظار التحقق</option><option value="maint">تحت الصيانة</option></select>
+          <select class="select" id="fDept"><option value="">كل الأقسام</option><option>التسويق</option><option>التصميم</option><option>الإدارة</option><option>الدعم</option><option>المبيعات</option></select>
+          <div class="view-toggle">
+            <button class="vt-btn active" data-mode="cards" title="بطاقات"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+            <button class="vt-btn" data-mode="table" title="جدول"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18"/></svg></button>
+          </div>
+          <button class="btn-primary" onclick="toast('نافذة إضافة حساب — سيتم ربطها بالباك-إند')"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>إضافة حساب</button>
+        </div>
+        <div class="filter-chips" id="platChips"></div>
+        <div class="acc-grid" id="accGrid"></div>
+        <div id="accTableWrap" class="hidden"></div>
+      </section>
+
+      <!-- ===== USERS ===== -->
+      <section class="view" id="view-users">
+        <div class="toolbar">
+          <div class="big-search"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input placeholder="ابحث عن مستخدم…"></div>
+          <button class="btn-primary" onclick="toast('نافذة إضافة مستخدم')"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>إضافة مستخدم</button>
+        </div>
+        <div id="usersWrap"></div>
+      </section>
+
+      <!-- ===== Placeholder views ===== -->
+      <section class="view" id="view-reports"><div class="panel"><div class="panel-body" style="text-align:center;padding:60px;color:var(--ink-3)">قسم التقارير — تصدير Excel / PDF / CSV (نموذج أولي)</div></div></section>
+      <section class="view" id="view-audit"><div class="panel"><div class="panel-body" id="auditBody"></div></div></section>
+      <section class="view" id="view-archive"><div class="panel"><div class="panel-body" style="text-align:center;padding:60px;color:var(--ink-3)">الأرشيف — الحسابات المحذوفة (Soft Delete) مع إمكانية الاستعادة</div></div></section>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Drawer -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer"></div>
+
+<div class="toast" id="toast"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg"></span></div>
+
+<script>
+/* ============ DATA ============ */
+const PLATFORMS={
+  instagram:{name:'Instagram',color:'#E1306C',bg:'#FCEBF1',icon:'<rect x="2" y="2" width="20" height="20" rx="6"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>'},
+  tiktok:{name:'TikTok',color:'#111',bg:'#EEE',icon:'<path d="M9 3v12a3 3 0 1 1-3-3M9 3c0 3 2 5 5 5M14 3v0"/>'},
+  telegram:{name:'Telegram',color:'#229ED9',bg:'#E4F3FB',icon:'<path d="M22 3 2 11l6 2 2 6 3-4 5 4z"/>'},
+  facebook:{name:'Facebook',color:'#1877F2',bg:'#E7F0FE',icon:'<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1z"/>'},
+  x:{name:'X',color:'#111',bg:'#EEE',icon:'<path d="M4 4l16 16M20 4 4 20"/>'},
+  youtube:{name:'YouTube',color:'#FF0000',bg:'#FDE7E7',icon:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/>'},
+  snapchat:{name:'Snapchat',color:'#C7A600',bg:'#FBF6D9',icon:'<path d="M12 3c3 0 4 2 4 5v2c1 0 2 1 3 1-1 1-2 1-2 2 1 2 3 2 3 3s-3 1-4 2c0 1 0 2-1 2-1-1-2-1-3-1s-2 0-3 1c-1 0-1-1-1-2-1-1-4-1-4-2s2-1 3-3c0-1-1-1-2-2 1 0 2-1 3-1V8c0-3 1-5 4-5z"/>'},
+  linkedin:{name:'LinkedIn',color:'#0A66C2',bg:'#E4EFF9',icon:'<rect x="2" y="2" width="20" height="20" rx="3"/><path d="M7 10v7M7 7v0M11 17v-4a2 2 0 0 1 4 0v4M11 10v7" stroke="#fff"/>'}
+};
+const STATUS={active:{l:'نشط',c:'s-active'},stopped:{l:'متوقف',c:'s-stopped'},blocked:{l:'محظور',c:'s-blocked'},pending:{l:'بانتظار التحقق',c:'s-pending'},maint:{l:'تحت الصيانة',c:'s-maint'}};
+
+const ACCOUNTS=[
+  {id:1,name:'404 Studio',user:'@4o62',plat:'instagram',dept:'التصميم',owner:'علي المرتضى',status:'active',last:'قبل ساعتين',email:'studio404@gmail.com',pw:'Kx9$mR2!vPq',phone:'+964 770 000 1234',recovery:'recovery404@proton.me',twofa:'مُفعّل',url:'instagram.com/4o62',opens:284,createdBy:'علي المرتضى',pwChanged:'قبل 12 يوم'},
+  {id:2,name:'مرماز أكاديمي',user:'@mirmaz_academy',plat:'instagram',dept:'التسويق',owner:'سارة أحمد',status:'active',last:'قبل 30 دقيقة',email:'mirmaz.ac@gmail.com',pw:'Ac@2024Mrz!',phone:'+964 771 222 3344',recovery:'mirmaz.rec@gmail.com',twofa:'مُفعّل',url:'instagram.com/mirmaz_academy',opens:512,createdBy:'سارة أحمد',pwChanged:'قبل 4 أيام'},
+  {id:3,name:'مرماز زون',user:'@mirmaz_zone',plat:'tiktok',dept:'التسويق',owner:'حسن فاضل',status:'active',last:'قبل يوم',email:'mirmaz.zone@gmail.com',pw:'Zn!Tik2024#',phone:'+964 772 555 6677',recovery:'—',twofa:'غير مُفعّل',url:'tiktok.com/@mirmaz_zone',opens:198,createdBy:'حسن فاضل',pwChanged:'قبل 45 يوم'},
+  {id:4,name:'قناة مرماز التعليمية',user:'mirmaz_edu',plat:'telegram',dept:'الدعم',owner:'محمد علي',status:'active',last:'قبل 5 ساعات',email:'—',pw:'Tg@Chan9931',phone:'+964 773 888 9900',recovery:'—',twofa:'مُفعّل',url:'t.me/mirmaz_edu',opens:87,createdBy:'محمد علي',pwChanged:'قبل يومين'},
+  {id:5,name:'مرماز — فيسبوك',user:'MirmazOfficial',plat:'facebook',dept:'التسويق',owner:'سارة أحمد',status:'pending',last:'قبل 3 أيام',email:'mirmaz.fb@gmail.com',pw:'Fb$Page2024',phone:'+964 774 111 2233',recovery:'mirmaz.fb.rec@gmail.com',twofa:'مُفعّل',url:'facebook.com/MirmazOfficial',opens:143,createdBy:'سارة أحمد',pwChanged:'قبل 20 يوم'},
+  {id:6,name:'404 — X',user:'@studio_404',plat:'x',dept:'التصميم',owner:'علي المرتضى',status:'stopped',last:'قبل شهر',email:'x404@gmail.com',pw:'Xacc!2024vv',phone:'+964 770 000 1234',recovery:'—',twofa:'غير مُفعّل',url:'x.com/studio_404',opens:34,createdBy:'علي المرتضى',pwChanged:'قبل 90 يوم'},
+  {id:7,name:'مرماز كيدز',user:'@mirmaz_kids',plat:'youtube',dept:'التسويق',owner:'زينب كريم',status:'active',last:'قبل 6 ساعات',email:'mirmaz.kids@gmail.com',pw:'Yt@Kids2024!',phone:'+964 775 444 5566',recovery:'mirmaz.kids.rec@gmail.com',twofa:'مُفعّل',url:'youtube.com/@mirmaz_kids',opens:421,createdBy:'زينب كريم',pwChanged:'قبل 8 أيام'},
+  {id:8,name:'مرماز — سناب',user:'mirmaz.snap',plat:'snapchat',dept:'المبيعات',owner:'محمد علي',status:'blocked',last:'قبل أسبوعين',email:'mirmaz.snap@gmail.com',pw:'Snp!2024xxz',phone:'+964 776 777 8899',recovery:'—',twofa:'غير مُفعّل',url:'snapchat.com/add/mirmaz.snap',opens:56,createdBy:'محمد علي',pwChanged:'قبل 60 يوم'},
+  {id:9,name:'404 — لينكدإن',user:'404-studio',plat:'linkedin',dept:'الإدارة',owner:'علي المرتضى',status:'active',last:'قبل يومين',email:'linkedin404@gmail.com',pw:'Li@Studio22!',phone:'+964 770 000 1234',recovery:'—',twofa:'مُفعّل',url:'linkedin.com/company/404-studio',opens:29,createdBy:'علي المرتضى',pwChanged:'قبل 15 يوم'},
+  {id:10,name:'مرماز — قناة الإعلانات',user:'mirmaz_ads',plat:'telegram',dept:'التسويق',owner:'سارة أحمد',status:'maint',last:'قبل 4 أيام',email:'—',pw:'Tg@Ads4421!',phone:'+964 771 222 3344',recovery:'—',twofa:'غير مُفعّل',url:'t.me/mirmaz_ads',opens:112,createdBy:'سارة أحمد',pwChanged:'قبل 30 يوم'},
+  {id:11,name:'مرماز — تيك توك 2',user:'@mirmaz_zone2',plat:'tiktok',dept:'التسويق',owner:'زينب كريم',status:'active',last:'قبل 8 ساعات',email:'mirmaz.zone2@gmail.com',pw:'Zn2!Tik99#x',phone:'+964 775 444 5566',recovery:'—',twofa:'مُفعّل',url:'tiktok.com/@mirmaz_zone2',opens:167,createdBy:'زينب كريم',pwChanged:'قبل 6 أيام'},
+  {id:12,name:'مرماز — إنستا الدعم',user:'@mirmaz_support',plat:'instagram',dept:'الدعم',owner:'حسن فاضل',status:'active',last:'قبل ساعة',email:'mirmaz.sup@gmail.com',pw:'Sp@Ig2024!k',phone:'+964 772 555 6677',recovery:'mirmaz.sup.rec@gmail.com',twofa:'مُفعّل',url:'instagram.com/mirmaz_support',opens:203,createdBy:'حسن فاضل',pwChanged:'قبل 3 أيام'}
+];
+
+const USERS=[
+  {name:'علي المرتضى',email:'ali@404studio.iq',role:'Super Admin',roleClass:'role-super',dept:'الإدارة',accounts:5,last:'الآن',status:'active'},
+  {name:'سارة أحمد',email:'sara@404studio.iq',role:'Admin',roleClass:'role-admin',dept:'التسويق',accounts:4,last:'قبل 30 دقيقة',status:'active'},
+  {name:'حسن فاضل',email:'hasan@404studio.iq',role:'Manager',roleClass:'role-mgr',dept:'الدعم',accounts:3,last:'قبل ساعة',status:'active'},
+  {name:'زينب كريم',email:'zainab@404studio.iq',role:'Marketing',roleClass:'role-mkt',dept:'التسويق',accounts:2,last:'قبل 6 ساعات',status:'active'},
+  {name:'محمد علي',email:'mohammed@404studio.iq',role:'Marketing',roleClass:'role-mkt',dept:'المبيعات',accounts:3,last:'قبل يومين',status:'active'},
+  {name:'نور الهدى',email:'noor@404studio.iq',role:'Viewer',roleClass:'role-view',dept:'التصميم',accounts:0,last:'قبل أسبوع',status:'stopped'}
+];
+
+/* ============ DASHBOARD RENDER ============ */
+const statData=[
+  {icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/>',bg:'var(--accent-soft)',c:'var(--accent)',val:112,lbl:'إجمالي الحسابات',trend:'+8',up:true},
+  {icon:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/>',bg:'var(--green-soft)',c:'var(--green)',val:98,lbl:'حسابات نشطة',trend:'+3',up:true},
+  {icon:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',bg:'#FDF3E3',c:'var(--amber)',val:7,lbl:'تحتاج تحديث كلمة المرور',trend:'+2',up:false},
+  {icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>',bg:'#F3E8FF',c:'var(--violet)',val:21,lbl:'حسابات مشتركة',trend:'+5',up:true}
+];
+document.getElementById('statGrid').innerHTML=statData.map(s=>`
+  <div class="stat">
+    <div class="stat-top">
+      <div class="stat-icn" style="background:${s.bg};color:${s.c}"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24">${s.icon}</svg></div>
+      <span class="stat-trend ${s.up?'up':'down'}"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="${s.up?'m18 15-6-6-6 6':'m6 9 6 6 6-6'}"/></svg>${s.trend}</span>
+    </div>
+    <div class="stat-val">${s.val}</div>
+    <div class="stat-lbl">${s.lbl}</div>
+  </div>`).join('');
+
+const platCounts={instagram:34,tiktok:18,telegram:27,facebook:9,x:12,youtube:12};
+document.getElementById('platRow').innerHTML=Object.entries(platCounts).map(([k,n])=>{
+  const p=PLATFORMS[k];
+  return `<div class="plat"><div class="plat-icn" style="background:${p.bg};color:${p.color}"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">${p.icon}</svg></div><div><div class="plat-n">${n}</div><div class="plat-l">${p.name}</div></div></div>`;
+}).join('');
+
+const deptData=[{l:'التسويق',v:48},{l:'التصميم',v:22},{l:'الدعم',v:18},{l:'المبيعات',v:15},{l:'الإدارة',v:9}];
+const maxV=Math.max(...deptData.map(d=>d.v));
+document.getElementById('bars').innerHTML=deptData.map(d=>`<div class="bar-col"><div class="bar" style="height:${(d.v/maxV)*100}%"><span class="bar-v">${d.v}</span></div><div class="bar-l">${d.l}</div></div>`).join('');
+
+const donutData=[{l:'Instagram',v:34,c:'#E1306C'},{l:'Telegram',v:27,c:'#229ED9'},{l:'TikTok',v:18,c:'#111'},{l:'YouTube',v:12,c:'#FF0000'},{l:'X',v:12,c:'#6B7280'},{l:'Facebook',v:9,c:'#1877F2'}];
+const totalD=donutData.reduce((a,b)=>a+b.v,0);let offset=25;
+document.getElementById('donut').innerHTML=donutData.map(d=>{
+  const pct=(d.v/totalD)*100;const dash=`${pct} ${100-pct}`;
+  const c=`<circle cx="21" cy="21" r="15.9" fill="transparent" stroke="${d.c}" stroke-width="5.5" stroke-dasharray="${dash}" stroke-dashoffset="${offset}"/>`;
+  offset-=pct;return c;
+}).join('');
+document.getElementById('legend').innerHTML=donutData.map(d=>`<div class="legend-item"><span class="legend-dot" style="background:${d.c}"></span><span class="legend-name">${d.l}</span><span class="legend-val">${d.v}</span></div>`).join('');
+
+const feedData=[
+  {icon:'<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',bg:'var(--accent-soft)',c:'var(--accent)',txt:'<b>سارة أحمد</b> فتحت حساب <b>مرماز أكاديمي</b>',t:'2 min ago'},
+  {icon:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',bg:'var(--amber-soft)',c:'var(--amber)',txt:'<b>علي المرتضى</b> عدّل كلمة مرور <b>404 Studio</b>',t:'12 min ago'},
+  {icon:'<path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/>',bg:'var(--green-soft)',c:'var(--green)',txt:'<b>حسن فاضل</b> أضاف ملاحظة على <b>قناة مرماز</b>',t:'1 hour ago'},
+  {icon:'<path d="M12 5v14M5 12h14"/>',bg:'#EEF0FE',c:'var(--violet)',txt:'<b>زينب كريم</b> أضافت حساباً جديداً <b>مرماز كيدز</b>',t:'6 hours ago'},
+  {icon:'<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',bg:'var(--red-soft)',c:'var(--red)',txt:'<b>محمد علي</b> أرشف حساب <b>مرماز — سناب</b>',t:'1 day ago'}
+];
+document.getElementById('feed').innerHTML=feedData.map(f=>`<div class="feed-item"><div class="feed-dot" style="background:${f.bg};color:${f.c}"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${f.icon}</svg></div><div><div class="feed-txt">${f.txt}</div><div class="feed-time">${f.t}</div></div></div>`).join('');
+
+/* ============ ACCOUNTS RENDER ============ */
+let activePlat='',viewMode='cards';
+const platChips=document.getElementById('platChips');
+platChips.innerHTML=`<button class="chip active" data-p="">الكل <span class="c">${ACCOUNTS.length}</span></button>`+
+  Object.entries(PLATFORMS).map(([k,p])=>{const n=ACCOUNTS.filter(a=>a.plat===k).length;return n?`<button class="chip" data-p="${k}">${p.name} <span class="c">${n}</span></button>`:''}).join('');
+platChips.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{platChips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');activePlat=c.dataset.p;renderAccounts()});
+
+function filtered(){
+  const q=document.getElementById('accSearch').value.toLowerCase();
+  const st=document.getElementById('fStatus').value;const dp=document.getElementById('fDept').value;
+  return ACCOUNTS.filter(a=>{
+    if(activePlat&&a.plat!==activePlat)return false;
+    if(st&&a.status!==st)return false;
+    if(dp&&a.dept!==dp)return false;
+    if(q&&!(a.name.toLowerCase().includes(q)||a.user.toLowerCase().includes(q)||a.email.toLowerCase().includes(q)))return false;
+    return true;
+  });
+}
+function pfpColor(p){return PLATFORMS[p].color}
+function renderAccounts(){
+  const data=filtered();
+  const grid=document.getElementById('accGrid'),tw=document.getElementById('accTableWrap');
+  if(viewMode==='cards'){
+    grid.classList.remove('hidden');tw.classList.add('hidden');
+    grid.innerHTML=data.map(a=>{const p=PLATFORMS[a.plat],s=STATUS[a.status];return `
+      <div class="acc-card" onclick="openDrawer(${a.id})">
+        <div class="acc-head">
+          <div class="acc-pfp" style="background:linear-gradient(135deg,${p.color},${p.color}cc)">${a.name.trim()[0]}</div>
+          <div class="acc-meta">
+            <div class="acc-name">${a.name}</div>
+            <div class="acc-user">${a.user}</div>
+            <span class="acc-plat-badge" style="background:${p.bg};color:${p.color}"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">${p.icon}</svg>${p.name}</span>
+          </div>
+          <span class="status-pill ${s.c}">${s.l}</span>
+        </div>
+        <div class="acc-info">
+          <div class="acc-info-item"><span class="acc-info-k">القسم</span><span class="acc-info-v">${a.dept}</span></div>
+          <div class="acc-info-item"><span class="acc-info-k">المسؤول</span><span class="acc-info-v">${a.owner}</span></div>
+          <div class="acc-info-item"><span class="acc-info-k">آخر استخدام</span><span class="acc-info-v">${a.last}</span></div>
+          <div class="acc-info-item"><span class="acc-info-k">مرات الفتح</span><span class="acc-info-v mono">${a.opens}</span></div>
+        </div>
+        <div class="acc-foot" onclick="event.stopPropagation()">
+          <button class="acc-btn acc-open" onclick="toast('فتح ${a.name} داخل متصفح مدمج (WebView)')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>فتح الحساب</button>
+          <button class="acc-btn" title="نسخ اليوزر" onclick="copy('${a.user}','تم نسخ اسم المستخدم')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          <button class="acc-btn" title="التفاصيل" onclick="openDrawer(${a.id})"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+          <button class="acc-btn" title="حذف" onclick="toast('نقل ${a.name} إلى الأرشيف (Soft Delete)')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+        </div>
+      </div>`}).join('')||emptyState();
+  }else{
+    grid.classList.add('hidden');tw.classList.remove('hidden');
+    tw.innerHTML=data.length?`<table class="acc-table"><thead><tr><th>الحساب</th><th>المنصة</th><th>القسم</th><th>المسؤول</th><th>الحالة</th><th>آخر استخدام</th><th></th></tr></thead><tbody>`+
+      data.map(a=>{const p=PLATFORMS[a.plat],s=STATUS[a.status];return `<tr onclick="openDrawer(${a.id})">
+        <td><div class="td-acc"><div class="td-pfp" style="background:linear-gradient(135deg,${p.color},${p.color}cc)">${a.name.trim()[0]}</div><div><div class="td-name">${a.name}</div><div class="td-user">${a.user}</div></div></div></td>
+        <td><span class="acc-plat-badge" style="background:${p.bg};color:${p.color}"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">${p.icon}</svg>${p.name}</span></td>
+        <td>${a.dept}</td><td>${a.owner}</td><td><span class="status-pill ${s.c}">${s.l}</span></td><td style="color:var(--ink-3)">${a.last}</td>
+        <td onclick="event.stopPropagation()"><div class="row-actions">
+          <button class="acc-btn" title="فتح" onclick="toast('فتح ${a.name}')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></button>
+          <button class="acc-btn" title="التفاصيل" onclick="openDrawer(${a.id})"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+        </div></td></tr>`}).join('')+`</tbody></table>`:emptyState();
+  }
+}
+function emptyState(){return `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--ink-3)">لا توجد حسابات مطابقة للبحث. جرّب تعديل الفلاتر.</div>`}
+document.querySelectorAll('.vt-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.vt-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');viewMode=b.dataset.mode;renderAccounts()});
+document.getElementById('accSearch').oninput=renderAccounts;
+document.getElementById('fStatus').onchange=renderAccounts;
+document.getElementById('fDept').onchange=renderAccounts;
+
+/* ============ DRAWER ============ */
+let pwVisible=false,curAcc=null;
+function openDrawer(id){
+  curAcc=ACCOUNTS.find(a=>a.id===id);pwVisible=false;
+  renderDrawer('creds');
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer(){document.getElementById('overlay').classList.remove('open');document.getElementById('drawer').classList.remove('open')}
+function renderDrawer(tab){
+  const a=curAcc,p=PLATFORMS[a.plat],s=STATUS[a.status];
+  let body='';
+  if(tab==='creds'){
+    body=`
+    <div class="secure-note"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>بيانات الدخول مشفّرة (AES-256). إظهار كلمة المرور يُسجَّل في سجل التدقيق باسمك ووقت العرض.</span></div>
+    <div class="d-section">
+      <div class="d-section-title"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>بيانات الدخول</div>
+      ${field('البريد',a.email,true)}
+      ${field('اسم المستخدم',a.user,true)}
+      <div class="d-field">
+        <span class="d-field-k">كلمة المرور</span>
+        <span class="d-field-v mono ${pwVisible?'':'pw-field'}" id="pwVal">${pwVisible?a.pw:'••••••••••'}</span>
+        <button class="eye-btn" onclick="togglePw()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${pwVisible?'<path d="M17.94 17.94A10 10 0 0 1 12 20c-7 0-11-8-11-8a18 18 0 0 1 5.06-5.94M9.9 4.24A9 9 0 0 1 12 4c7 0 11 8 11 8a18 18 0 0 1-2.16 3.19M1 1l22 22"/>':'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'}</svg></button>
+        <button class="copy-btn" onclick="copy('${a.pw}','تم نسخ كلمة المرور — سُجّلت العملية')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+      </div>
+      ${field('الهاتف',a.phone,true)}
+      ${field('بريد الاسترداد',a.recovery,true)}
+      ${field('المصادقة الثنائية',a.twofa,false)}
+    </div>`;
+  }else if(tab==='info'){
+    body=`
+    <div class="d-section">
+      <div class="d-section-title"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>معلومات عامة</div>
+      ${field('اسم الحساب',a.name,false)}
+      ${field('الرابط',a.url,true)}
+      ${field('المنصة',p.name,false)}
+      ${field('القسم',a.dept,false)}
+      ${field('الحالة',s.l,false)}
+    </div>
+    <div class="d-section">
+      <div class="d-section-title"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>معلومات الإدارة</div>
+      ${field('من أنشأه',a.createdBy,false)}
+      ${field('المسؤول الحالي',a.owner,false)}
+      ${field('آخر استخدام',a.last,false)}
+      ${field('مرات الفتح',String(a.opens),false)}
+      ${field('آخر تغيير كلمة مرور',a.pwChanged,false)}
+    </div>`;
+  }else{
+    const logs=[
+      {icon:'<path d="M15 3h6v6M10 14 21 3"/>',bg:'var(--accent-soft)',c:'var(--accent)',txt:`<b>${a.owner}</b> فتح الحساب عبر متصفح مدمج`,t:a.last},
+      {icon:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',bg:'var(--amber-soft)',c:'var(--amber)',txt:`<b>${a.createdBy}</b> عدّل كلمة المرور`,t:a.pwChanged},
+      {icon:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',bg:'#F3E8FF',c:'var(--violet)',txt:`<b>علي المرتضى</b> عرض كلمة المرور`,t:'قبل 3 أيام'},
+      {icon:'<path d="M12 5v14M5 12h14"/>',bg:'var(--green-soft)',c:'var(--green)',txt:`<b>${a.createdBy}</b> أنشأ الحساب`,t:'عند الإنشاء'}
+    ];
+    body=`<div class="d-section"><div class="d-section-title"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>السجل الكامل</div>${logs.map(l=>`<div class="log-entry"><div class="log-icn" style="background:${l.bg};color:${l.c}"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">${l.icon}</svg></div><div><div class="log-txt">${l.txt}</div><div class="log-time">${l.t}</div></div></div>`).join('')}</div>`;
+  }
+  document.getElementById('drawer').innerHTML=`
+    <div class="drawer-head">
+      <div class="dh-top">
+        <div class="dh-pfp" style="background:linear-gradient(135deg,${p.color},${p.color}cc)">${a.name.trim()[0]}</div>
+        <div style="min-width:0"><div class="dh-name">${a.name}</div><div class="dh-user">${a.user}</div><span class="status-pill ${s.c}" style="margin-top:6px">${s.l}</span></div>
+        <button class="dh-close" onclick="closeDrawer()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="dh-tabs">
+        <button class="dh-tab ${tab==='creds'?'active':''}" onclick="renderDrawer('creds')">بيانات الدخول</button>
+        <button class="dh-tab ${tab==='info'?'active':''}" onclick="renderDrawer('info')">المعلومات</button>
+        <button class="dh-tab ${tab==='log'?'active':''}" onclick="renderDrawer('log')">السجل</button>
+      </div>
+    </div>
+    <div class="drawer-body">${body}
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="toast('فتح ${a.name} داخل متصفح مدمج (WebView)')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>فتح الحساب</button>
+    </div>`;
+}
+function field(k,v,copyable){
+  return `<div class="d-field"><span class="d-field-k">${k}</span><span class="d-field-v mono">${v}</span>${copyable&&v!=='—'?`<button class="copy-btn" onclick="copy('${v}','تم النسخ')"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>`:''}</div>`;
+}
+function togglePw(){pwVisible=!pwVisible;if(pwVisible)toast('عرض كلمة المرور — سُجّلت العملية في سجل التدقيق');renderDrawer('creds')}
+
+/* ============ USERS ============ */
+document.getElementById('usersWrap').innerHTML=`<table class="users-table"><thead><tr><th>المستخدم</th><th>الصلاحية</th><th>القسم</th><th>الحسابات المسندة</th><th>آخر نشاط</th><th>الحالة</th></tr></thead><tbody>`+
+  USERS.map(u=>`<tr><td><div class="td-acc"><div class="avatar" style="width:34px;height:34px;border-radius:9px;font-size:12px">${u.name[0]}</div><div><div class="td-name">${u.name}</div><div class="td-user" style="direction:rtl">${u.email}</div></div></div></td>
+  <td><span class="role-badge ${u.roleClass}">${u.role}</span></td><td>${u.dept}</td><td class="mono">${u.accounts}</td><td style="color:var(--ink-3)">${u.last}</td>
+  <td><span class="status-pill ${u.status==='active'?'s-active':'s-stopped'}">${u.status==='active'?'نشط':'معطّل'}</span></td></tr>`).join('')+`</tbody></table>`;
+
+/* ============ AUDIT ============ */
+const auditLogs=[
+  {u:'علي المرتضى',act:'عرض كلمة مرور',tgt:'404 Studio',ip:'192.168.1.10',t:'2025-07-07 14:32'},
+  {u:'سارة أحمد',act:'فتح حساب',tgt:'مرماز أكاديمي',ip:'192.168.1.14',t:'2025-07-07 14:02'},
+  {u:'حسن فاضل',act:'تصدير تقرير',tgt:'تقرير الحسابات',ip:'192.168.1.22',t:'2025-07-07 12:15'},
+  {u:'محمد علي',act:'أرشفة حساب',tgt:'مرماز — سناب',ip:'192.168.1.31',t:'2025-07-06 18:40'},
+  {u:'زينب كريم',act:'إضافة حساب',tgt:'مرماز كيدز',ip:'192.168.1.19',t:'2025-07-06 09:11'}
+];
+document.getElementById('auditBody').innerHTML=`<table class="users-table"><thead><tr><th>المستخدم</th><th>العملية</th><th>الهدف</th><th>عنوان IP</th><th>الوقت</th></tr></thead><tbody>`+
+  auditLogs.map(l=>`<tr><td class="td-name">${l.u}</td><td>${l.act}</td><td>${l.tgt}</td><td class="mono">${l.ip}</td><td class="mono" style="color:var(--ink-3)">${l.t}</td></tr>`).join('')+`</tbody></table>`;
+
+/* ============ NAV ============ */
+const titles={dashboard:['لوحة الإحصائيات','نظرة عامة على جميع الحسابات والنشاط'],accounts:['الحسابات','إدارة جميع حسابات التواصل الاجتماعي'],users:['المستخدمون','إدارة المستخدمين والصلاحيات (RBAC)'],reports:['التقارير','تصدير Excel / PDF / CSV'],audit:['سجل التدقيق','كل عملية مسجّلة بالمستخدم والوقت'],archive:['الأرشيف','الحسابات المحذوفة (Soft Delete)']};
+document.querySelectorAll('.nav-item').forEach(n=>n.onclick=()=>{
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));n.classList.add('active');
+  const v=n.dataset.view;
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.getElementById('pageTitle').textContent=titles[v][0];
+  document.getElementById('pageSub').textContent=titles[v][1];
+  document.getElementById('sidebar').classList.remove('open');
+});
+
+/* ============ UTIL ============ */
+function copy(t,m){navigator.clipboard?.writeText(t);toast(m)}
+let toastT;
+function toast(m){clearTimeout(toastT);document.getElementById('toastMsg').textContent=m;const t=document.getElementById('toast');t.classList.add('show');toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+renderAccounts();
+</script>
+</body>
+</html>
